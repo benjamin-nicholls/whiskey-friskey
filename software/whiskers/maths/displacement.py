@@ -1,15 +1,17 @@
 import sys
 import math
 
-# TODO convert XYZ displacement into a linear value
-# Which method to use-- unsure.
-
 
 def convert_XYZ_to_linear_displacement(X, Y, Z):
+    # TODO convert XYZ displacement into a linear value
     return
 
 
 def euclidian_distance_from_origin(x2, y2=None, z2=None):
+    '''
+    From given parameters: XY?Z?
+    Returns eucliain distance from {0,0,0}.
+    '''
     x1, y1, z1 = 0  # Origin.
     # No given values.
     if x2==None and y2==None and z2==None:
