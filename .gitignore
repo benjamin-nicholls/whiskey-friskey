@@ -1,0 +1,6 @@
+# Some default ignores.
+__pycache__/
+build/
+.ipynb_checkpoints
+.env
+.DS_Store
