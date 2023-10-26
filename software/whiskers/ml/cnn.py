@@ -1,5 +1,5 @@
 import sys
-from whiskers.maths.displacement import convert_XYZ_to_linear_displacement
+from whiskers.maths.displacement import euclidian_distance_from_origin
 
 
 # Data in list format.
@@ -10,7 +10,8 @@ from whiskers.maths.displacement import convert_XYZ_to_linear_displacement
 
 
 def main(argv):
-    pass
+    print(f'{argv[0]} has no implementation yet.')
+    return
 
 
 if __name__ == '__main__':
