@@ -7,7 +7,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 /***This is the "I2C Address Scanner" code. This code captures the serial address of the sensor connected at the periphiral
 of the Arduino Uno R3. Please be informed that the SDA_PIN and SCL_PIN have been defined in accordance with the Arduino Uno R3
-schematic diagram. If in the future some other MCu is to be used then, the respectives pins have to define with respect to
+schematic diagram. If in the future some other MCU is to be used then, the respectives pins have to define with respect to
 the schematics of that specific MCU***/
  
 #include "I2CScanner.h"
