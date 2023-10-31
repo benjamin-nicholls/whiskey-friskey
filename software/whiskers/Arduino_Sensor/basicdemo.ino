@@ -1,3 +1,7 @@
+/** Please be informed that, this is code is a part of the set of examples that comes with the Adafruit_MLX90393 library.
+Also the I2CScanner_Fab_lab.ino is to be bootloaded pior to this code to get the I2C address of the magnetosensor at the 
+peripheral**/
+
 #include "Adafruit_MLX90393.h"
 
 Adafruit_MLX90393 sensor = Adafruit_MLX90393();
