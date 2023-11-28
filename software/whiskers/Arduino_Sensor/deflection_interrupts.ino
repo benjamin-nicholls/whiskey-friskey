@@ -22,7 +22,7 @@ WebServer server(80);
 
 void setup() {
     // Wire.begin(YOUR_SDA_PIN, YOUR_SCL_PIN);
-    Serial.begin(115200);
+    Serial.begin(115200);  // baud rate = 115200
     delay(1000);
     Serial.print("Magnetometer Test\n\n");
     
@@ -37,12 +37,12 @@ void setupSensor() {
     bool printFlag = false;
     while (!sensor.begin_I2C(PIN)) { 
         if (!printFlag) {
-            Serial.print("No sensor found ... check your wiring?\n");
+            Serial.print("No sensor found... check wiring?\n");
             printFlag = true;
         }
         delay(10);
     }
-    Serial.print("Found a MLX90393 sensor\n"); 
+    Serial.print("Found a MLX90393 sensor.\n"); 
 }
 
 
