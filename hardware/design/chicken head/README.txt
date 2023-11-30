@@ -1,0 +1,1 @@
+Spherical flexure joint 1 and 2 (original files) by Jelle_Rommers on Thingiverse: https://www.thingiverse.com/thing:4841850
