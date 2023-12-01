@@ -4,8 +4,7 @@
 #include <WiFi.h>
 #include <WiFiClient.h>
 #include <WebServer.h>
-#include "mainpage.h"
-#include "jscript.h"
+
 
      Adafruit_MLX90393 sensor = Adafruit_MLX90393();
     const char* ssid = "Galaxy M12 7ED0";
