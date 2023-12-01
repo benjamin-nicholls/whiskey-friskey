@@ -6,17 +6,17 @@
 #include <WiFi.h>
 #include <WiFiClient.h>
 #include <WebServer.h>
-#include "mainpage.h"
-#include "jscript.h"
+//#include "mainpage.h"
+//#include "jscript.h"
 // Make your own 'credentials.h'. See example.
 #include "credentials.h"  
 
 Adafruit_MLX90393 sensor = Adafruit_MLX90393();
 sensors_event_t event;
 float mag_x, mag_y, mag_z;
-const int PIN = 0X18
-const int INTERRUPT_PIN = 2;
 
+const int INTERRUPT_PIN = 4;
+const int I2C_PIN = 0X18;
 WebServer server(80);
 
 
@@ -26,16 +26,16 @@ void setup() {
     delay(1000);
     Serial.print("Magnetometer Test\n\n");
     
-    setupSensor()
+    setupSensor();
     // https://www.arduino.cc/reference/en/language/functions/external-interrupts/attachinterrupt/
-    attachInterrupt(digitalPinToInterrupt(INTERRUPT_PIN), readSensor, CHANGE)                
+    attachInterrupt(digitalPinToInterrupt(INTERRUPT_PIN), readSensor, CHANGE);      
 }
 
 
 void setupSensor() {
     //Serial.println("Starting Adafruit MLX90393 Demo");
     bool printFlag = false;
-    while (!sensor.begin_I2C(PIN)) { 
+    while (!sensor.begin_I2C(I2C_PIN)) {
         if (!printFlag) {
             Serial.print("No sensor found... check wiring?\n");
             printFlag = true;
@@ -45,7 +45,7 @@ void setupSensor() {
     Serial.print("Found a MLX90393 sensor.\n"); 
 }
 
-
+/*
 void setupWifi() {
     WiFi.mode(WIFI_STA);
     WiFi.begin(SSID, PASSWORD);
@@ -58,7 +58,7 @@ void setupWifi() {
 
     Serial.println("");
     Serial.print("Connected to ");
-    Serial.println(ssid);
+    Serial.println(SSID);
 
     Serial.print("IP address: ");
     Serial.println(WiFi.localIP());
@@ -66,6 +66,7 @@ void setupWifi() {
     server.on("/", []() {server.send(200, "text/html", page);});
     server.on("/jscript.js", []() {server.send(200, "text/javascript", javascript);});
 }
+*/
 
 
 void loop() {
