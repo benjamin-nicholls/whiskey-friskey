@@ -1,0 +1,43 @@
+function eulerBernoulliBeamDeflection(length, modulusOfElasticity, momentOfInertia, loadPosition, loadForce):
+    // Define constants
+    E = modulusOfElasticity
+    I = momentOfInertia
+    
+    // Define the differential equation for Euler-Bernoulli beam theory
+    function differentialEquation(x, v, slope):
+        return -loadForce * (x - loadPosition) / (6 * E * I) * (3 * length - (x - loadPosition)) + slope
+
+    // Define the Runge-Kutta method for solving differential equations
+    function rungeKutta(h, x, v, slope):
+        k1 = h * differentialEquation(x, v, slope)
+        k2 = h * differentialEquation(x + h/2, v + k1/2, slope + k1/2)
+        k3 = h * differentialEquation(x + h/2, v + k2/2, slope + k2/2)
+        k4 = h * differentialEquation(x + h, v + k3, slope + k3)
+        return v + (k1 + 2*k2 + 2*k3 + k4)/6
+
+    // Initialize variables
+    h = 0.1 // Step size for numerical integration
+    x = 0.0 // Initial position
+    v = 0.0 // Initial deflection
+    slope = 0.0 // Initial slope
+
+    // Numerically integrate the differential equation using Runge-Kutta method
+    while x < length:
+        v = rungeKutta(h, x, v, slope)
+        slope = slope + h * differentialEquation(x, v, slope)
+        x = x + h
+
+    return v
+
+// Example usage
+length = 10.0 // Length of the plastic rod
+modulusOfElasticity = 200000.0 // Modulus of elasticity of the plastic material
+momentOfInertia = 100.0 // Moment of inertia of the plastic rod's cross-section
+loadPosition = 5.0 // Position of the point load
+loadForce = 100.0 // Magnitude of the point load
+
+deflection = eulerBernoulliBeamDeflection(length, modulusOfElasticity, momentOfInertia, loadPosition, loadForce)
+print("Deflection at the point of contact:", deflection)
+
+
+For More Details - "https://primer-computational-mathematics.github.io/book/c_mathematics/numerical_methods/5_Runge_Kutta_method.html"
