@@ -1,51 +1,59 @@
 // Sensor includes.
 #include <Wire.h>
-#include <Adafruit_Sensor.h>
-#include <Adafruit_MLX90393.h>
+#include "MLX90393.h"
+//#include <Adafruit_Sensor.h>
+//#include <Adafruit_MLX90393.h>
 // Wifi/server includes.
 #include <WiFi.h>
 #include <WiFiClient.h>
-#include <WebServer.h>
-//#include "mainpage.h"
-//#include "jscript.h"
+#include "WebServer.h"
+#include "mainpage.h"
+#include "jscript.h"
 // Make your own 'credentials.h'. See example.
 #include "credentials.h"  
 
-Adafruit_MLX90393 sensor = Adafruit_MLX90393();
-sensors_event_t event;
-float mag_x, mag_y, mag_z;
+#define INTERRUPT_PIN 5
+#define I2C_PIN 0X18
+#define SDA_PIN 21  // Data pin.
+#define SCL_PIN 22 // Clock pin.
 
-const int INTERRUPT_PIN = 4;
-const int I2C_PIN = 0X18;
-WebServer server(80);
+MLX90393 mlx;
+const byte axisFlags = MLX90393::X_FLAG | MLX90393::Y_FLAG | MLX90393::Z_FLAG;
+float mag_x, mag_y, mag_z;
+volatile bool dataReady = false;
+
+//WebServer server(80);
 
 
 void setup() {
-    // Wire.begin(YOUR_SDA_PIN, YOUR_SCL_PIN);
+    Wire.begin(SDA_PIN, SCL_PIN);
+    Wire.setClock(400000);
+    Wire.begin();
     Serial.begin(115200);  // baud rate = 115200
     delay(1000);
-    Serial.print("Magnetometer Test\n\n");
-    
+
     setupSensor();
-    // https://www.arduino.cc/reference/en/language/functions/external-interrupts/attachinterrupt/
-    attachInterrupt(digitalPinToInterrupt(INTERRUPT_PIN), readSensor, CHANGE);      
+    //setupWifi();
+    attachInterrupt(digitalPinToInterrupt(INTERRUPT_PIN), readSensor, RISING);      
 }
 
 
 void setupSensor() {
-    //Serial.println("Starting Adafruit MLX90393 Demo");
     bool printFlag = false;
-    while (!sensor.begin_I2C(I2C_PIN)) {
-        if (!printFlag) {
-            Serial.print("No sensor found... check wiring?\n");
-            printFlag = true;
-        }
-        delay(10);
-    }
+    byte status = mlx.begin(0, 0, INTERRUPT_PIN, Wire);
+    Serial.print(status);
     Serial.print("Found a MLX90393 sensor.\n"); 
+    // gain
+    // oversampling
+    // digitalfiltering
+    // resolution
+    //temperature compenstation
+    // sparkfun MLX... hookup guide
+    mlx.startBurst(axisFlags);
+    return;
 }
 
-/*
+
 void setupWifi() {
     WiFi.mode(WIFI_STA);
     WiFi.begin(SSID, PASSWORD);
@@ -63,38 +71,32 @@ void setupWifi() {
     Serial.print("IP address: ");
     Serial.println(WiFi.localIP());
 
-    server.on("/", []() {server.send(200, "text/html", page);});
-    server.on("/jscript.js", []() {server.send(200, "text/javascript", javascript);});
+    //server.on("/", []() {server.send(200, "text/html", page);});
+    //server.on("/jscript.js", []() {server.send(200, "text/javascript", javascript);});
+    
+   return;
 }
-*/
-
 
 void loop() {
-    //Serial.print("X: "); 
-    //Serial.print(a); 
-    //Serial.print(" uT\t");
-    //Serial.print("Y: "); 
-    //Serial.print(b); 
-    //Serial.print(" uT\t");
-    //Serial.print("Z: "); 
-    //Serial.print(c); 
-    // Serial.println(" uT\t");
+    MLX90393::txyzRaw data;
+    if (dataReady) {
+        Serial.read();
+        mlx.readMeasurement(axisFlags, data);
+        mag_x = data.x;
+        mag_y = data.y;
+        mag_z = data.z;
 
-    int deflection = sqrt((mag_x*mag_x) + (mag_y*mag_y) + (mag_z*mag_z));
-    Serial.print(deflection);
-    Serial.print("\t");
-    if (deflection > 4500){
-        Serial.print("No point of Contact\n");
-    } else {
-        Serial.print("Point of contact Detected\n");
+        Serial.print("\nX: ");
+        Serial.print(mag_x);
+        Serial.print("\nY: ");
+        Serial.print(mag_y);
+        Serial.print("\nZ: ");
+        Serial.print(mag_z);
+
+        dataReady = false;
     }
-
-    delay(10); // Adjust the delay as needed
 }
 
 void readSensor() {
-    sensor.getEvent(&event);
-    mag_x = event.magnetic.x;
-    mag_y = event.magnetic.y;
-    mag_z = event.magnetic.z;
+    dataReady = true;
 }
