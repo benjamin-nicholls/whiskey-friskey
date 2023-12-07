@@ -14,7 +14,7 @@ const char* PASSWORD = "tiaq1076";
 WebServer server(80);
 
 
-volatile float mag_x, mag_y, mag_z;
+volatile float mag_x, mag_y, mag_z,Angle_x,Angle_y,Angle_z;
 
 #define INTERRUPT_PIN 25
 #define I2C_PIN 0X18
