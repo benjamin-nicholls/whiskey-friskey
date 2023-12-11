@@ -19,7 +19,7 @@
 
 MLX90393 mlx;
 const byte axisFlags = MLX90393::X_FLAG | MLX90393::Y_FLAG | MLX90393::Z_FLAG;
-float mag_x, mag_y, mag_z;
+//float mag_x, mag_y, mag_z;
 volatile bool dataReady = false;
 
 //WebServer server(80);
@@ -82,19 +82,19 @@ void loop() {
     if (dataReady) {
         Serial.read();
         mlx.readMeasurement(axisFlags, data);
-        mag_x = data.x;
-        mag_y = data.y;
-        mag_z = data.z;
+        float mag_x = data.x;
+        float mag_y = data.y;
+        float mag_z = data.z;
 
-        Serial.print("\nX: ");
         Serial.print(mag_x);
-        Serial.print("\nY: ");
+        Serial.print("\t");
         Serial.print(mag_y);
-        Serial.print("\nZ: ");
-        Serial.print(mag_z);
+        Serial.print("\t");
+        Serial.println(mag_z);
 
         dataReady = false;
     }
+    //delay(500);
 }
 
 void readSensor() {
