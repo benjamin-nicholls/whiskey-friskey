@@ -86,6 +86,10 @@ void loop() {
     //delay(1000); // Adjust the delay as needed
 }
 
+
+/*
+Should not be done within readSensor() otherwise ESP will error out.
+*/
 void readSensor() {
     sensors_event_t event;
     sensor.getEvent(&event);
@@ -96,7 +100,7 @@ void readSensor() {
     mag_z = event.magnetic.z;
 
     //atan2 is the arctangent2 function, which takes two arguments and returns the angle in radians from 0 to 2π radians
-    int pi =  3.14159;
+    float pi =  3.14159;
     Angle_x = atan2(mag_y, mag_z) * 180 / pi;
     Angle_y = atan2(mag_z, mag_x) * 180 / pi;
     Angle_z = 90 - atan2(sqrt(mag_x^2 + mag_y^2), z) * 180 / pi;
