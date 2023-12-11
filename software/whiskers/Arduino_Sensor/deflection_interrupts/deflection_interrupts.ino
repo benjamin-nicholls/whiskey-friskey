@@ -19,12 +19,15 @@
 
 MLX90393 mlx;
 const byte axisFlags = MLX90393::X_FLAG | MLX90393::Y_FLAG | MLX90393::Z_FLAG;
-//float mag_x, mag_y, mag_z;
 volatile bool dataReady = false;
+// These three are currently declared in loop() but should be declared globally
+// when serial plotter is not needed for slight speed increase.
+//float mag_x, mag_y, mag_z;
 
 //WebServer server(80);
 
 
+// Wire and Serial setups. Attach interrupt.
 void setup() {
     Wire.begin(SDA_PIN, SCL_PIN);
     Wire.setClock(400000);
@@ -54,6 +57,7 @@ void setupSensor() {
 }
 
 
+// Initialise Wifi settings and confirm parameters.
 void setupWifi() {
     WiFi.mode(WIFI_STA);
     WiFi.begin(SSID, PASSWORD);
@@ -77,11 +81,15 @@ void setupWifi() {
    return;
 }
 
+
+// Main loop. Retreive data and save to variables.
 void loop() {
     MLX90393::txyzRaw data;
     if (dataReady) {
         Serial.read();
         mlx.readMeasurement(axisFlags, data);
+        // These should be changed to "mag_x data.x;"... when serial plotter is not needed.
+        // Declare these globally in actual use.
         float mag_x = data.x;
         float mag_y = data.y;
         float mag_z = data.z;
@@ -94,9 +102,11 @@ void loop() {
 
         dataReady = false;
     }
-    //delay(500);
+    //delay(500);  // Delay used for testing/monitoring.
 }
 
+
+// Function called on interrupt.
 void readSensor() {
     dataReady = true;
 }
