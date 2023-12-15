@@ -46,11 +46,13 @@ void setupSensor() {
     byte status = mlx.begin(0, 0, INTERRUPT_PIN, Wire);
     Serial.print(status);
     Serial.print("Found a MLX90393 sensor.\n"); 
-    // gain
-    // oversampling
-    // digitalfiltering
-    // resolution
-    //temperature compenstation
+
+    mlx.setGainSel(7);  // default 7
+    mlx.setResolution(0, 0, 0);  // default (0, 0, 0)
+    mlx.setOverSampling(3);  // default 3
+    mlx.setDigitalFiltering(7);  // default 7
+    mlx.setTemperatureCompensation(0);  // default 0
+
     // sparkfun MLX... hookup guide
     mlx.startBurst(axisFlags);
     return;
