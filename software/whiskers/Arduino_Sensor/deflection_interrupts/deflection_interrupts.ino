@@ -44,15 +44,16 @@ void setup() {
 void setupSensor() {
     bool printFlag = false;
     byte status = mlx.begin(0, 0, INTERRUPT_PIN, Wire);
+    Serial.print("Status=");
     Serial.print(status);
-    Serial.print("Found a MLX90393 sensor.\n"); 
-
-    mlx.setGainSel(7);  // default 7
-    mlx.setResolution(0, 0, 0);  // default (0, 0, 0)
-    mlx.setOverSampling(3);  // default 3
-    mlx.setDigitalFiltering(7);  // default 7
+    Serial.print("\nFound a MLX90393 sensor.\n"); 
+    
+    mlx.setGainSel(0);                  // default 7
+    mlx.setResolution(0, 0, 0);         // default (0, 0, 0)
+    mlx.setOverSampling(3);             // default 3
+    mlx.setDigitalFiltering(7);         // default 7
     mlx.setTemperatureCompensation(0);  // default 0
-
+    
     // sparkfun MLX... hookup guide
     mlx.startBurst(axisFlags);
     return;
@@ -84,6 +85,12 @@ void setupWifi() {
 }
 
 
+// Function called on interrupt.
+void readSensor() {
+    dataReady = true;
+}
+
+
 // Main loop. Retreive data and save to variables.
 void loop() {
     MLX90393::txyzRaw data;
@@ -102,13 +109,9 @@ void loop() {
         Serial.print("\t");
         Serial.println(mag_z);
 
+
         dataReady = false;
     }
-    //delay(500);  // Delay used for testing/monitoring.
-}
+    delay(100);  // Delay used for testing/monitoring.
 
-
-// Function called on interrupt.
-void readSensor() {
-    dataReady = true;
 }
